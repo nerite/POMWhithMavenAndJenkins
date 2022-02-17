@@ -88,8 +88,9 @@ public class GenericWrapper extends Reports{
 	}
 	
 	public void click(WebElement ele) {
-		String text = ele.getText();
+		String text = "";
 		try {
+			text = ele.getText();
 			ele.click();
 			reportStep("The element \""+text+"\" clicked Successfully", "PASS");
 		} catch (WebDriverException e) {
@@ -98,8 +99,9 @@ public class GenericWrapper extends Reports{
 	}
 	
 	public void clear(WebElement ele) {
-		String text = ele.getAttribute("value");
+		String text = "";
 		try {
+			text = ele.getAttribute("value");
 			ele.clear();
 			reportStep("The text \"" + text + "\" deleted Successfully", "PASS");
 		} catch (Exception e) {
@@ -108,8 +110,9 @@ public class GenericWrapper extends Reports{
 	}
 	
 	public void clearAndType(WebElement ele, String data) {
-		String text = ele.getAttribute("value");
+		String text = "";
 		try {
+			text = ele.getAttribute("value");
 			ele.clear();
 			ele.sendKeys(data);
 			reportStep("The old text \""+text+"\" deleted and new text \""+data+"\" was typed Successfully", "PASS");
@@ -119,20 +122,35 @@ public class GenericWrapper extends Reports{
 	}
 	
 	public String getElementText(WebElement ele) {
-		String text = ele.getText();
-		System.out.println("The elements text \"" +text+ "\" retreaved Successfully");
-		return text;
+		String text = null;
+		try {
+			text = ele.getText();
+			reportStep("The elements text \"" +text+ "\" retreaved Successfully", "PASS");
+		}catch (Exception e) {
+			reportStep("The elements text \"" +text+ "\" couldn't be retreaved", "FAIL");
+		}
+			return text;
 	}
 	
 	public String getBackgroundColor(WebElement ele) {
-		String cssValue = ele.getCssValue("color");
-		System.out.println("The cssValue \""+cssValue+"\" returns Successfully");
+		String cssValue = null;
+		try {
+			cssValue = ele.getCssValue("color");
+			reportStep("The cssValue \""+cssValue+"\" returns Successfully", "PASS");
+		} catch (Exception e) {
+			reportStep("The cssValue \""+cssValue+"\" doesn't return", "FAIL");
+		}
 		return cssValue;
 	}
 	
 	public String getTypedText(WebElement ele) {
-		String text = ele.getAttribute("value");
-		System.out.println("Typed text \"" + text + "\" retreaved Successfylly");
+		String text = null;
+		try {
+			text = ele.getAttribute("value");
+			reportStep("Typed text \"" + text + "\" retreaved Successfylly", "PASS");
+		} catch (Exception e) {
+			reportStep("Typed text \"" + text + "\" couldn't be retreaved", "FAIL");
+		}
 		return text;
 	}
 	
@@ -166,10 +184,11 @@ public class GenericWrapper extends Reports{
 	public boolean verifyExatText(WebElement ele, String expectedText) {
 		String text = ele.getText();
 		boolean bReturn = false;
-		if(text.equals(expectedText)) {
-			reportStep("Text \""+ text +"\" matched \""+expectedText+"\"", "PASS");
-			bReturn = true;
-		}else {
+		try{ if(text.equals(expectedText)) {
+				reportStep("Text \""+ text +"\" matched \""+expectedText+"\"", "PASS");
+				bReturn = true;
+			 }
+		}catch (Exception e) {
 			reportStep("Text \""+text+"\" didn't match \""+expectedText+"\"", "FAIL");
 		}
 		return bReturn;
@@ -178,10 +197,11 @@ public class GenericWrapper extends Reports{
 	public boolean verifyPartialText(WebElement ele, String expectedText) {
 		String text = ele.getText();
 		boolean bReturn = false;
-		if(text.contains(expectedText)) {
-			reportStep("Text \""+text+"\" contains partial text \""+expectedText+"\"", "PASS");
-			bReturn = true;
-		}else {
+		try { if(text.contains(expectedText)) {
+				reportStep("Text \""+text+"\" contains partial text \""+expectedText+"\"", "PASS");
+				bReturn = true;
+				}
+		}catch (Exception e) {
 			reportStep("Text \""+text+"\" doesn't contains partial text \""+expectedText+"\"", "FAIL");
 		}
 		return bReturn;
@@ -189,10 +209,11 @@ public class GenericWrapper extends Reports{
 	
 	public boolean verifyExactAttribute(WebElement ele, String attribute, String value) {
 		boolean bReturn = false;
-		if(ele.getAttribute(attribute).equals(value)) {
-			reportStep("The attribute \""+attribute+"\" contains text \""+value, "PASS");
-			bReturn = true;
-		}else {
+		try { if(ele.getAttribute(attribute).equals(value)) {
+				reportStep("The attribute \""+attribute+"\" contains text \""+value, "PASS");
+				bReturn = true;
+				}
+		}catch (Exception e) {
 			reportStep("The attribute \""+attribute+"\" doesn't contain text \""+value, "FAIL");
 		}
 		return bReturn; 
@@ -200,123 +221,172 @@ public class GenericWrapper extends Reports{
 	
 	public boolean verifyPartialAttribute(WebElement ele, String attribute, String value) {
 		boolean bReturn = false;
-		if(ele.getAttribute(attribute).contains(value)) {
-			System.out.println("The attribute \""+attribute+"\" contains partial text \""+value);
-			bReturn = true;
-		}else {
-			System.out.println("The attribute \""+attribute+"\" doesn't contain partial text \""+value);
+		try { if(ele.getAttribute(attribute).contains(value)) {
+				reportStep("The attribute \""+attribute+"\" contains partial text \""+value, "PASS");
+				bReturn = true;
+			}
+		}catch (Exception e) {
+			reportStep("The attribute \""+attribute+"\" doesn't contain partial text \""+value, "FAIL");
 		}
 		return bReturn; 
 	}
 	
 	public boolean verifyDisplayed(WebElement ele) {
 		boolean bReturn = false;
-		if(ele.isDisplayed()) {
-			System.out.println("The element \""+ele+"\" is visible");
-			bReturn = true;
-		}else {
-			System.out.println("The element \""+ele+"\" is not visible");
+		try { if(ele.isDisplayed()) {
+				reportStep("The element \""+ele+"\" is visible", "PASS");
+				bReturn = true;
+			}
+		}catch (Exception e) {
+			reportStep("The element \""+ele+"\" is not visible", "FAIL");
 		}
 		return bReturn;
 	}
 	
 	public boolean verifyEnabled(WebElement ele) {
 		boolean bReturn = false;
-		if(ele.isEnabled()) {
-			System.out.println("The element \""+ele+"\" is Enabled");
-			bReturn =true;
-		}else {
-			System.out.println("The element is \""+ele+"\" not Enabled");
+		try { if(ele.isEnabled()) {
+				reportStep("The element \""+ele+"\" is Enabled", "PASS");
+				bReturn = true;
+			}
+		}catch (Exception e) {
+			reportStep("The element \""+ele+"\" is not Enabled", "FAIL");
 		}
 		return bReturn;
 	}
 	
 	public boolean verifySelected(WebElement ele) {
 		boolean bReturn = false;
-		if(ele.isSelected()) {
-			System.out.println("The element \""+ele+"\" is selected");
-			bReturn = true;
-		}else {
-			System.out.println("The element \""+ele+"\" is not selected");
+		try { if(ele.isSelected()) {
+				reportStep("The element \""+ele+"\" is selected", "PASS");
+				bReturn = true;
+			}
+		}catch (Exception e) {
+			reportStep("The element \""+ele+"\" is not selected", "FAIL");
 		}
 		return bReturn;
 	}
 	
 	public void switchToAlert() {
-		driver.switchTo().alert();
-		System.out.println("Control switch from HTML to alert Successfully");
+		try {
+			driver.switchTo().alert();
+			reportStep("Control switched from HTML to alert Successfully", "PASS");
+		} catch (Exception e) {
+			reportStep("Control didn't switched from HTML to alert", "FAIL");
+		}
 	}
 	
 	public void acceptAlert() {
-		Alert alert = driver.switchTo().alert();
-		String text = alert.getText();
-		alert.accept();
-		System.out.println("Alert \""+text+"\" accepted Successfully");
+		String text = "";
+		try {
+			Alert alert = driver.switchTo().alert();
+			text = alert.getText();
+			alert.accept();
+			reportStep("Alert \""+text+"\" accepted Successfully", "PASS");
+		} catch (Exception e) {
+			reportStep("Alert \""+text+"\" wasn't accepted", "FAIL");
+		}
 	}
 	
 	public void dismissAlert() {
-		Alert alert = driver.switchTo().alert();
-		String text = alert.getText();
-		alert.dismiss();
-		System.out.println("Alert \""+text+"\" dismissed Successfully");
+		String text = "";
+		try {
+			Alert alert = driver.switchTo().alert();
+			text = alert.getText();
+			alert.dismiss();
+			reportStep("Alert \""+text+"\" dismissed Successfully", "PASS");
+		} catch (Exception e) {
+			reportStep("Alert \""+text+"\" wasn't dismissed", "FAIL");
+		}
 	}
 	
 	public String getAlertText() {
-		String alTxt = driver.switchTo().alert().getText();
-		System.out.println("Control switch from HTML to alert and fetched the Text: "+alTxt);
+		String alTxt = null;
+		try {
+			alTxt = driver.switchTo().alert().getText();
+			reportStep("Control switch from HTML to alert and fetched the Text: "+alTxt, "PASS");
+		} catch (Exception e) {
+			reportStep("Control couldn't switch from HTML to alert and fetch the Text: "+alTxt, "FAIL");
+		}
 		return alTxt;
 	}
 	
 	public void enterAlertText(String data) {
-		driver.switchTo().alert().sendKeys(data);
-		System.out.println("Control switch from HTML to alert and entered the given data is: "+data);
+		try {
+			driver.switchTo().alert().sendKeys(data);
+			reportStep("Control switch from HTML to alert and entered the given data is: "+data, "PASS");
+		} catch (Exception e) {
+			reportStep("Control couldn't switch from HTML to alert and enter given data: "+data, "FAIL");
+		}
 	}
 	
 	public void switchToWindow(int index) {
-		Set<String> allWin = driver.getWindowHandles();
-		List<String> allLs = new ArrayList<String>(allWin);
-		driver.switchTo().window(allLs.get(index));
-		System.out.println("The Window with index: "+index+" switched Successfully");
+		try {
+			Set<String> allWin = driver.getWindowHandles();
+			List<String> allLs = new ArrayList<String>(allWin);
+			driver.switchTo().window(allLs.get(index));
+			reportStep("The Window with index: "+index+" switched Successfully", "PASS");
+		} catch (Exception e) {
+			reportStep("The Window with index: "+index+" couldn't be switched", "FAIL");
+		}
 	}
 	
 	public void switchToFrame(int index) {
-		driver.switchTo().frame(index);
-		System.out.println("The frame with index: "+index+" switched Successfully");
+		try {
+			driver.switchTo().frame(index);
+			reportStep("The frame with index: "+index+" switched Successfully", "PASS");
+		} catch (Exception e) {
+			reportStep("The frame with index: "+index+" couldn't be switched", "FAIL");
+		}
 	}
 	
 	public void switchToFrame(WebElement ele) {
-		driver.switchTo().frame(ele);
-		System.out.println("The frame with element: "+ele+" switched Successfully");
+		try {
+			driver.switchTo().frame(ele);
+			reportStep("The frame with element: "+ele+" switched Successfully", "PASS");
+		} catch (Exception e) {
+			reportStep("The frame with element: "+ele+" couldn't be switched", "FAIL");
+		}
 	}
 	
 	public void switchToFrame(String idOrName) {
-		driver.switchTo().frame(idOrName);
-		System.out.println("The frame with Id or Name: "+idOrName+" switched Successfully");
+		try {
+			driver.switchTo().frame(idOrName);
+			reportStep("The frame with Id or Name: "+idOrName+" switched Successfully", "PASS");
+		} catch (Exception e) {
+			reportStep("The frame with Id or Name: "+idOrName+" couldn't be switched", "FAIL");
+		}
 	}
 	
 	public void switchOutFrame() {
-		driver.switchTo().defaultContent();
-		System.out.println("Came out from frames Successfully");
+		try {
+			driver.switchTo().defaultContent();
+			reportStep("Came out from frames Successfully", "PASS");
+		} catch (Exception e) {
+			reportStep("Couldn't came out from frames", "FAIL");
+		}
 	}
 	
 	public boolean verifyUrl(String url) {
 		boolean bReturn = false;
-		if(driver.getCurrentUrl().equals(url)) {
-			System.out.println("Page Url: "+url+" matched Successfully");
-			bReturn = true;
-		}else {
-			System.out.println("Page Url: "+url+" didn't match");
+		try { if(driver.getCurrentUrl().equals(url)) {
+				reportStep("Page Url: "+url+" matched Successfully", "PASS");
+				bReturn = true;
+				}
+		}catch (Exception e) {
+			reportStep("Page Url: "+url+" didn't match", "FAIL");
 		}
 		return bReturn;
 	}
 	
 	public boolean verifyTitle(String title) {
 		boolean bReturn = false;
-		if(driver.getTitle().equals(title)) {
-			System.out.println("Page title: \""+title+"\" matched Successfully");
-			bReturn = true;
-		}else {
-			System.out.println("Page title: \""+title+"\" didn't match");
+		try { if(driver.getTitle().equals(title)) {
+				reportStep("Page title: \""+title+"\" matched Successfully", "PASS");
+				bReturn = true;
+			}
+		}catch (Exception e) {
+			reportStep("Page title: \""+title+"\" didn't match", "FAIL");
 			
 		}
 		return bReturn;
@@ -324,24 +394,33 @@ public class GenericWrapper extends Reports{
 	
 	public boolean verifyPartialTitle(String title) {
 		boolean bReturn = false;
-		if(driver.getTitle().contains(title)) {
-			System.out.println("Page partial title: \""+title+"\" matched Successfully");
-			bReturn = true;
-		}else {
-			System.out.println("Page partial title: \""+title+"\" didn't match");
+		try { if(driver.getTitle().contains(title)) {
+				reportStep("Page partial title: \""+title+"\" matched Successfully", "PASS");
+				bReturn = true;
+				}
+		}catch (Exception e) {
+			reportStep("Page partial title: \""+title+"\" didn't match", "FAIL");
 			
 		}
 		return bReturn;
 	}
 	
 	public void close() {
-		driver.close();
-		System.out.println("The browser closed Successfully");
+		try {
+			driver.close();
+			reportStep("The browser closed Successfully", "PASS");
+		} catch (Exception e) {
+			reportStep("The browser couldn't be closed", "FAIL");
+		}
 	}
 	
 	public void quit() {
-		driver.quit();
-		System.out.println("The browser's all windows and tabs closed Successfully");
+		try {
+			driver.quit();
+			reportStep("The browser's all windows and tabs closed Successfully", "PASS");
+		} catch (Exception e) {
+			reportStep("The browser's all windows and tabs couldn't be closed", "FAIL");
+		}
 	}
 	
 }
